@@ -29,8 +29,8 @@ limitations under the License.
 <body>
 
 
-  <div id="interactive"></div>
   <ul id="devices"></ul>
+  <div id="interactive"></div>
 
   <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
     crossorigin="anonymous"></script>
@@ -41,7 +41,50 @@ limitations under the License.
       console.log('DEVICES: ', devices);
       devices.forEach(function (device) {
         $('#devices').append('<li>' + device.label + '</li>');
+        console.log(device);
       });
+    });
+  </script>
+  <script>
+    var cam = null;
+
+    Quagga.CameraAccess.enumerateVideoDevices().then(function (devices) {
+      console.log('DEVICES: ', devices);
+      cam = devices.reduce(function (device, camera) {
+        console.log('camera in reduce: ', camera);
+        console.log('device in reduce: ', device);
+        return device.label.indexOf('front') < 0 ? camera.deviceId : device.deviceId
+      }, devices[0]);
+    });
+    console.log('CAM: ', cam);
+
+
+    Quagga.init({
+      inputStream: {
+        name: "Live",
+        type: "LiveStream",
+        constraints: {
+          width: 640,
+          height: 480,
+          facingMode: "environment",
+          deviceId: Quagga.CameraAccess.enumerateVideoDevices().then(function (devices) {
+            devices.reduce(function (device, camera) {
+              return device.label.indexOf('front') < 0 ? camera.deviceId : device.deviceId
+            }, devices[0]);
+          })
+        },
+        target: document.getElementById('interactive')    // Or '#yourElement' (optional)
+      },
+      decoder: {
+        readers: ["code_128_reader"]
+      }
+    }, function (err) {
+      if (err) {
+        console.log(err);
+        return
+      }
+      console.log("Initialization finished. Ready to start");
+      Quagga.start();
     });
   </script>
 </body>
