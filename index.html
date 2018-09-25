@@ -54,8 +54,10 @@ limitations under the License.
 
 
     Quagga.CameraAccess.enumerateVideoDevices().then(function (devices) {
-      cam = devices.reduce(function (device, camera) {
-        return device.label.indexOf('front') < 0 ? camera.deviceId : device.deviceId
+      cam = devices.reduce(function (camera, device) {
+        console.log('CAMERA: ', camera);
+        console.log('DEVICE: ', device);
+        return device.label.indexOf('back') < 0 ? camera.deviceId : device.deviceId
       }, devices[0]);
       console.log('CAM: ', cam);
       $('#devices').append('<li>' + cam + '</li>');
