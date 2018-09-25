@@ -66,7 +66,7 @@ limitations under the License.
         constraints: {
           width: 640,
           height: 480,
-          facingMode: "environment",
+          // facingMode: "environment",
           deviceId: Quagga.CameraAccess.enumerateVideoDevices().then(function (devices) {
             devices.reduce(function (device, camera) {
               return device.label.indexOf('front') < 0 ? camera.deviceId : device.deviceId
