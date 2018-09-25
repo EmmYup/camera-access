@@ -48,44 +48,40 @@ limitations under the License.
   <script>
     var cam = null;
 
+
+
+
     Quagga.CameraAccess.enumerateVideoDevices().then(function (devices) {
-      console.log('DEVICES: ', devices);
       cam = devices.reduce(function (device, camera) {
-        console.log('camera in reduce: ', camera);
-        console.log('device in reduce: ', device);
         return device.label.indexOf('front') < 0 ? camera.deviceId : device.deviceId
       }, devices[0]);
-    });
-    console.log('CAM: ', cam);
-
-
-    Quagga.init({
-      inputStream: {
-        name: "Live",
-        type: "LiveStream",
-        constraints: {
-          width: 640,
-          height: 480,
-          // facingMode: "environment",
-          deviceId: Quagga.CameraAccess.enumerateVideoDevices().then(function (devices) {
-            devices.reduce(function (device, camera) {
-              return device.label.indexOf('front') < 0 ? camera.deviceId : device.deviceId
-            }, devices[0]);
-          })
+      console.log('CAM: ', cam);
+      Quagga.init({
+        inputStream: {
+          name: "Live",
+          type: "LiveStream",
+          constraints: {
+            width: 640,
+            height: 480,
+            // facingMode: "environment",
+            deviceId: cam
+          },
+          target: document.getElementById('interactive')    // Or '#yourElement' (optional)
         },
-        target: document.getElementById('interactive')    // Or '#yourElement' (optional)
-      },
-      decoder: {
-        readers: ["code_128_reader"]
-      }
-    }, function (err) {
-      if (err) {
-        console.log(err);
-        return
-      }
-      console.log("Initialization finished. Ready to start");
-      Quagga.start();
+        decoder: {
+          readers: ["code_128_reader"]
+        }
+      }, function (err) {
+        if (err) {
+          console.log(err);
+          return
+        }
+        console.log("Initialization finished. Ready to start");
+        Quagga.start();
+      });
     });
+
+
   </script>
 </body>
 
