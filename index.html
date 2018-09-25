@@ -41,6 +41,7 @@ limitations under the License.
       console.log('DEVICES: ', devices);
       devices.forEach(function (device) {
         $('#devices').append('<li>' + device.label + '</li>');
+        $('#devices').append('<li>' + device.deviceId + '</li>');
         console.log(device);
       });
     });
