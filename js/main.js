@@ -47,7 +47,7 @@ $(function() {
             : device.deviceId;
         }, devices[0]);
         console.log('CAM: ', cam);
-        Quagga.init(this.state, function(err) {
+        Quagga.init(App.state(cam), function(err) {
           if (err) {
             return self.handleError(err);
           }

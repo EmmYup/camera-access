@@ -61,6 +61,50 @@ limitations under the License.
       }, devices[0]);
       console.log('CAM: ', cam);
       $('#devices').append('<li>' + cam + '</li>');
+      Quagga.init({
+        inputStream: {
+          type: 'LiveStream',
+          constraints: {
+            width: { min: 640 },
+            height: { min: 480 },
+            facingMode: 'environment',
+            aspectRatio: { min: 1, max: 2 },
+            deviceId: cam
+          },
+          target: document.getElementById('interactive')
+        },
+        locator: {
+          patchSize: 'medium',
+          halfSample: true,
+        },
+        numOfWorkers: 2,
+        frequency: 10,
+        decoder: {
+          readers: [
+            {
+              format: 'upc_reader',
+              config: {},
+            },
+          ],
+        },
+        locate: true,
+      }, function (err, result) {
+        if (err) {
+          console.log(err);
+          return
+        }
+        console.log('RESULT: ', result);
+        if (result.codeResult) {
+          console.log("result", result.codeResult.code);
+        } else {
+          console.log("not detected");
+        }
+        console.log("Initialization finished. Ready to start");
+
+
+
+        Quagga.start();
+      });
     });
 
 
